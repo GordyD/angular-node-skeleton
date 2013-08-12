@@ -1,0 +1,8 @@
+p There are {{trips.length}} trips
+
+div(ng-repeat='trip in trips')
+	h3 {{trip.destination}}
+	div {{trip.month}} - {{trip.year}}
+	a(href='trip/view/{{trip.id}}') More 
+	a(href='trip/edit/{{trip.id}}') Edit 
+	a(href='trip/delete/{{trip.id}}') Delete
