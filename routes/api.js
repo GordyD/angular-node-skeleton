@@ -1,3 +1,5 @@
+var db = require('../lib/db.js');
+
 /*
  * TripJoin API
  */
@@ -18,32 +20,46 @@
  };
 
 exports.trips = function (req, res) {
-	var trips = [];
-	data.trips.forEach( function(trip, i) {
-		trips.push({
-			id: i,
-			destination: trip.destination,
-			month: trip.month,
-			year: trip.year
-		});
-	})
-	res.json({trips: trips});
+	db.query('SELECT * FROM trips').then(
+		function woo(result) {
+			res.json({trips: result});
+		},
+		function ahh(err) {
+			console.error(err);
+			res.json(false);
+		}
+	);
 };
 
 exports.trip = function (req, res) {
 	var id = req.params.id;
-	if(id >= 0 && id < data.trips.length) {
-		res.json({
-			trip: data.trips[id]
-		});
+	if(id >= 0) {
+		db.query('SELECT * FROM trips WHERE id = ' + id).then(
+			function woo(result) {
+				res.json({trip: result[0]});
+			},
+			function ahh(err) {
+				console.error(err);
+				res.json(false);
+			}
+		);
 	} else {
 		res.json(false);
 	}
 };
 
 exports.newTrip = function(req, res) {
-	data.trips.push(req.body);
-	res.json(req.body);
+	var insert = 'INSERT INTO trips (destination, month, year) VALUES($1,$2,$3)',
+	params = [req.body.destination, req.body.month, req.body.year];
+	db.query(insert,params).then(
+		function woo(result) {
+			res.json(req.body);
+		},
+		function ahh(err) {
+			console.error(err);
+			res.json(false);
+		}
+	)
 };
 
 exports.editTrip = function(req, res) {
