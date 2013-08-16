@@ -7,7 +7,7 @@ var db = require('../lib/db.js');
 exports.trips = function (req, res) {
 	db.query('SELECT * FROM trips').then(
 		function woo(result) {
-			res.json({trips: result});
+			res.json({trips: result.rows});
 		},
 		function ahh(err) {
 			console.error(err);
@@ -21,7 +21,7 @@ exports.trip = function (req, res) {
 	if(id >= 0) {
 		db.query('SELECT * FROM trips WHERE id = ' + id).then(
 			function woo(result) {
-				res.json({trip: result[0]});
+				res.json({trip: result.rows[0]});
 			},
 			function ahh(err) {
 				console.error(err);
@@ -34,7 +34,7 @@ exports.trip = function (req, res) {
 };
 
 exports.newTrip = function(req, res) {
-	var insert = 'INSERT INTO trips (destination, month, year) VALUES($1,$2,$3)',
+	var insert = 'INSERT INTO trips (destination, month, year) VALUES("$1",$2,$3)',
 	params = [req.body.destination, req.body.month, req.body.year];
 	db.query(insert,params).then(
 		function woo(result) {
