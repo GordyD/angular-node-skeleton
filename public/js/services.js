@@ -2,6 +2,16 @@
 
 /* Services */
 var app = angular.module('myApp.services', []);
+app.factory('GeoNames', function($rootScope) {
+	return {
+		lookup: function(txt) {
+			$http.get('/api/destinations?text='+txt).
+		    success(function (data) {
+		      $rootScope.$broadcast('geonamesLookup', data);
+		    });
+		}
+	}
+});
 app.factory('Facebook', function ($rootScope) {
     return {
         getLoginStatus:function () {
