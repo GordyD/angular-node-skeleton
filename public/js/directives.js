@@ -14,9 +14,8 @@ angular.module('myApp.directives', []).
 
     	google.maps.event.addListener(autocomplete, 'place_changed', function() {
       		var place = autocomplete.getPlace();
-      		scope.form.destination =place.formatted_address;
-      		console.log(element);
-      		scope.form.geoinfo = { name: place.formatted_address, lat: place.geometry.location.mb, lon: place.geometry.location.nb};
+      		scope.form.destination = place.formatted_address;
+      		scope.form.geoinfo = { name: place.formatted_address, lat: place.geometry.location.mb, lon: place.geometry.location.nb };
     	});
   	}
   });
