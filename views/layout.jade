@@ -6,7 +6,7 @@ html(lang='en', ng-app='myApp')
     title TripJoin
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css')
     link(rel='stylesheet', href='/css/app.css')
-  body
+  body(ng-controller="AppController")
     div.navbar 
       div.container
         button(type="button", class="navbar-toggle", data-toggle="collapse", data-target=".navbar-responsive-collapse")
@@ -28,6 +28,7 @@ html(lang='en', ng-app='myApp')
           div(class="col-12") TripJoin was created by Gordon Dent (2013)
     script(src='js/lib/angular/angular.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.5.0/ui-bootstrap-tpls.min.js')
+    script(src='//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
     script(src='js/app.js')
     script(src='js/services.js')
     script(src='js/controllers.js')
