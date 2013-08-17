@@ -152,6 +152,10 @@ angular.module('myApp.controllers', []).
   controller('IndexController', function ($scope, $http) {
     $http.get('/api/trips').
     success(function (data, status, headers, config) {
+      var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      data.trips.forEach(function(value, index, arr) {
+        arr[index].month = months[value.month];
+      });
       $scope.trips = data.trips;
     });
   }).
@@ -170,6 +174,8 @@ angular.module('myApp.controllers', []).
   controller('ViewTripController', function ($scope, $http, $routeParams) {
     $http.get('/api/trips/'+$routeParams.id).
     success(function (data) {
+      var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      data.trip.month = months[data.trip.month];
       $scope.trip = data.trip;
     });
 
@@ -178,7 +184,9 @@ angular.module('myApp.controllers', []).
     $scope.form = {};
     $http.get('/api/trips/'+$routeParams.id).
     success(function (data) {
-      $scope.form = data.trip;
+      var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      data.trip.month = months[data.trip.month];
+      $scope.trip = data.trip;
     });
 
     $scope.updateTrip = function () {
