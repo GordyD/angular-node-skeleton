@@ -2,6 +2,7 @@
 
 /* Services */
 var app = angular.module('myApp.services', []);
+app.value('version', '0.1');
 app.factory('GeoNames', function($rootScope) {
 	return {
 		lookup: function(txt) {
