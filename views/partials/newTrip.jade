@@ -1,9 +1,29 @@
 h2 Create a new trip
-form 
-	label(for="destination") Destination:
-	input(name="destination", ng-model="form.destination")
-	label(for="month") Month:
-	input(name="month", ng-model="form.month")
-	label(for="year") Year:
-	input(name="year", ng-model="form.year")
-	button(ng-click="createTrip()") Create Trip
+form.form-horizontal
+	div.form-group 
+		label(class="col-4 control-label", for="destination") Where would you like to go?
+		div.col-8
+			input(class="form-control", name="destination", ng-model="form.destination", location-lookup, autofocus)
+	div.form-group
+		label(class="col-4 control-label", for="month") When do you want to go?
+		div.col-4
+			select(name="month", class="form-control", ng-model="form.month")
+				option(value="", disabled) Month
+				option(ng-repeat="month in months", value="{{$index+1}}") {{month}} 
+		div.col-4
+			select(name="year", class="form-control", ng-model="form.year")
+				option(value="", disabled) Year
+				option(ng-repeat="year in years", value="{{year}}") {{year}} 
+	div.form-group
+		label(class="col-4 control-label", for="month") What is your budget?
+		div.col-4
+			select(class="form-control", name="budget", ng-model="form.budget")
+				option(value="", disabled) Not set
+				option(value="1000") {{currency}}1,000
+				option(value="1500")  {{currency}}1,500
+				option(value="2000")  {{currency}}2,000
+				option(value="2500")  {{currency}}2,500
+				option(value="3000")  {{currency}}3,000 
+	div.form-group
+		div(class="col-4 col-offset-8")
+			button(class="form-control btn btn-primary", ng-click="createTrip()") Create Trip
