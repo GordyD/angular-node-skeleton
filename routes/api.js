@@ -34,7 +34,7 @@ exports.trip = function (req, res) {
 };
 
 exports.newTrip = function(req, res) {
-	var insert = 'INSERT INTO trips (destination, month, year) VALUES("$1",$2,$3)',
+	var insert = 'INSERT INTO trips (destination, month, year) VALUES($1,$2,$3)',
 	params = [req.body.destination, req.body.month, req.body.year];
 	db.query(insert,params).then(
 		function woo(result) {
