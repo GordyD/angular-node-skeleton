@@ -1,7 +1,7 @@
 var db = require('../../lib/db.js');
 
 /*
- * TripJoin API
+ * TripJoin /trip API
  */
 
 exports.collection = function (req, res) {
