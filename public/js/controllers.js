@@ -56,8 +56,7 @@ angular.module('myApp.controllers', []).
             //$http.post('php/auth.php', parameters).success(function () {
                 //$scope.updateSession();
             //});
-            console.log('*** Printing out params back from Facebook')
-            console.log(parameters);
+            $scope.loginDetails = parameters;
         }
 
         if (args.userNotAuthorized === true) {
@@ -142,6 +141,7 @@ angular.module('myApp.controllers', []).
 
     $scope.getInfo = function () {
         FB.api('/' + $rootScope.session.facebook_id, function (response) {
+          console.log(response);
             console.log('Good to see you, ' + response.name + '.');
         });
         $rootScope.info = $rootScope.session;

@@ -20,6 +20,9 @@ html(lang='en', ng-app='myApp')
               a(href='/') Home
             li
               a(href='/trip/new') Add a new trip
+        div
+          span(ng-bind="loginDetails.first_name")
+          span {{loginDetails.last_name}}
     div(id="wrap")
       block body
     footer(class="tripjoin-footer")
