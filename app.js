@@ -5,7 +5,7 @@
 
 var express = require('express'),
   routes = require('./routes'),
-  api = require('./routes/api'),
+  api = require('./routes/api/trip'),
   http = require('http'),
   path = require('path');
 
@@ -46,11 +46,11 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
-app.get('/api/trips', api.trips);
-app.get('/api/trips/:id', api.trip);
-app.post('/api/trips', api.newTrip);
-app.put('/api/trips/:id', api.editTrip);
-app.delete('/api/trips/:id', api.deleteTrip);
+app.get('/api/trips', api.collection);
+app.get('/api/trips/:id', api.get);
+app.post('/api/trips', api.create);
+app.put('/api/trips/:id', api.edit);
+app.delete('/api/trips/:id', api.delete);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
