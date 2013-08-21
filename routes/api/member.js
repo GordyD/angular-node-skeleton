@@ -1,15 +1,13 @@
-var db = require('../db.js');
+var db = require('../../lib/db.js');
 
 /*
- * TriJoin /location API
+ * TripJoin  /user API
  */
 
 exports.collection = function (req, res) {
-	var offset = req.params.offset | 0;
-	var limit = req.param.id | 10;
-	db.query('SELECT * FROM location').then(
+	db.query('SELECT * FROM user').then(
 		function woo(result) {
-			res.json({locations: result.rows});
+			res.json({users: result.rows});
 		},
 		function ahh(err) {
 			console.error(err);
@@ -21,9 +19,9 @@ exports.collection = function (req, res) {
 exports.get = function (req, res) {
 	var id = req.params.id;
 	if(id > 0) {
-		db.query('SELECT * FROM location WHERE id = ' + id).then(
+		db.query('SELECT * FROM user WHERE id = ' + id).then(
 			function woo(result) {
-				res.json({location: result.rows[0]});
+				res.json({user: result.rows[0]});
 			},
 			function ahh(err) {
 				console.error(err);
@@ -35,18 +33,9 @@ exports.get = function (req, res) {
 	}
 };
 
-function parseGeoLocation(geolocation) {
-	var location = [];
-	return location;
-}
-
 exports.create = function(req, res) {
-	if(!req.body.geolocation) {
-		res.json(false);
-		return;
-	}
-	var insert = 'INSERT INTO location (canonical, city, region, country, coordinates) VALUES($1,$2,$3,$4,$5)',
-	params = [req.body.geolocation.name, req.body.geolocation.city, req.body.year];
+	var insert = 'INSERT INTO user (first_name, last_name, facebook_id, image_url) VALUES($1,$2,$3,$4)',
+	params = [req.body.first_name, req.body.last_name, req.body.facebook_id, req.body.image_url];
 	db.query(insert,params).then(
 		function woo(result) {
 			res.json(req.body);
@@ -59,8 +48,8 @@ exports.create = function(req, res) {
 };
 
 exports.edit = function(req, res) {
-	var insert = 'UPDATE location SET destination = $2, month = $3, year = $4 WHERE id = $1',
-	params = [req.params.id, req.body.destination, req.body.month, req.body.year];
+	var insert = 'UPDATE user SET first_name = $2, last_name = $3, image_url = $4 WHERE id = $1',
+	params = [req.params.id, req.body.first_name, req.body.last_name, req.body.image_url];
 	db.query(insert,params).then(
 		function woo(result) {
 			res.json(req.body);
@@ -73,7 +62,7 @@ exports.edit = function(req, res) {
 };
 
 exports.delete = function(req, res) {
-	var insert = 'DELETE FROM locations WHERE id = $1',
+	var insert = 'DELETE FROM user WHERE id = $1',
 	params = [req.params.id];
 	db.query(insert,params).then(
 		function woo(result) {

@@ -1,76 +1,61 @@
-var db = require('../../lib/db.js');
+var trip = require('../../lib/api/trip.js');
+var location = require('../../lib/api/location.js');
 
 /*
  * TripJoin /trip API
  */
-
 exports.collection = function (req, res) {
-	db.query('SELECT * FROM trip').then(
+	trip.collection().then(
 		function woo(result) {
+			console.log('awesome');
 			res.json({trips: result.rows});
 		},
 		function ahh(err) {
-			console.error(err);
-			res.json(false);
+			res.json(err);
 		}
 	);
 };
 
 exports.get = function (req, res) {
-	var id = req.params.id;
-	if(id >= 0) {
-		db.query('SELECT * FROM trip WHERE id = ' + id).then(
-			function woo(result) {
-				res.json({trip: result.rows[0]});
-			},
-			function ahh(err) {
-				console.error(err);
-				res.json(false);
-			}
-		);
-	} else {
-		res.json(false);
-	}
+	trip.get(req.params.id).then(
+		function woo(result) {
+			res.json({trip: result.rows[0]});
+		},
+		function ahh(err) {
+			res.json(err);
+		}
+	);
 };
 
 exports.create = function(req, res) {
-	var insert = 'INSERT INTO trip (destination, month, year) VALUES($1,$2,$3)',
-	params = [req.body.destination, req.body.month, req.body.year];
-	db.query(insert,params).then(
+	trip.create(1,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description).then(
 		function woo(result) {
-			res.json(req.body);
+			res.json(result);
 		},
 		function ahh(err) {
-			console.error(err);
-			res.json(false);
+			res.json(err)
 		}
 	);
 };
 
 exports.edit = function(req, res) {
-	var insert = 'UPDATE trip SET destination = $2, month = $3, year = $4 WHERE id = $1',
-	params = [req.params.id, req.body.destination, req.body.month, req.body.year];
-	db.query(insert,params).then(
+	trip.edit(req.params.id,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description).then(
 		function woo(result) {
-			res.json(req.body);
+			res.json(result);
 		},
 		function ahh(err) {
-			console.error(err);
-			res.json(false);
+			res.json(err);
 		}
 	);
 };
 
 exports.delete = function(req, res) {
-	var insert = 'DELETE FROM trips WHERE id = $1',
-	params = [req.params.id];
-	db.query(insert,params).then(
+	trip.delete(req.params.id).then(
 		function woo(result) {
-			res.json(true);
+			res.json(result);
 		},
 		function ahh(err) {
-			console.error(err);
-			res.json(false);
+			res.json(err);
 		}
 	);
 };
