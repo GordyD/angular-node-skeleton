@@ -2,15 +2,16 @@
 /**
  * Module dependencies
  */
-
 var express = require('express'),
   routes = require('./routes'),
-  api = require('./routes/api/trip'),
+  tripApi = require('./routes/api/trip'),
+  memberApi = require('./routes/api/member'),
+  locationApi = require('./routes/api/location'),
+  sessionApi = require('./routes/api/session'),
   http = require('http'),
   path = require('path');
 
 var app = module.exports = express();
-
 
 /**
  * Configuration
@@ -36,7 +37,6 @@ if (app.get('env') === 'production') {
   // TODO
 };
 
-
 /**
  * Routes
  */
@@ -46,15 +46,27 @@ app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 
 // JSON API
-app.get('/api/trips', api.collection);
-app.get('/api/trips/:id', api.get);
-app.post('/api/trips', api.create);
-app.put('/api/trips/:id', api.edit);
-app.delete('/api/trips/:id', api.delete);
+app.post('/api/login', sessionApi.login);
+app.get('/api/session', sessionApi.authenticate, sessionApi.session);
+app.get('/api/session', sessionApi.authenticate, sessionApi.logout);
+
+app.get('/api/trips', tripApi.collection);
+app.get('/api/trips/:id', tripApi.get);
+app.post('/api/trips', sessionApi.authenticate, tripApi.create);
+app.put('/api/trips/:id', sessionApi.authenticate, tripApi.edit);
+app.delete('/api/trips/:id', sessionApi.authenticate, tripApi.delete);
+
+app.post('/api/members', memberApi.create);
+app.get('/api/members', memberApi.collection);
+app.get('/api/members/:id', memberApi.get);
+app.get('/api/members/:id', memberApi.edit);
+app.get('/api/members/:id', memberApi.delete);
+
+app.get('/api/members', memberApi.collection);
+app.get('/api/members', memberApi.collection);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
-
 
 /**
  * Start Server
