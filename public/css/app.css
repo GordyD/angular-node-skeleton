@@ -17,6 +17,19 @@ body{
   background-color: transparent;
 }
 
+.tripjoin-login_details {
+  color: white;
+  
+}
+
+.display {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
 #wrap {
   min-height: 100%;
   height: auto !important;

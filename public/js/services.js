@@ -15,11 +15,6 @@ app.factory('GeoNames', function($rootScope) {
 });
 app.factory('Facebook', function ($rootScope) {
     return {
-        getLoginStatus:function () {
-            FB.getLoginStatus(function (response) {
-                $rootScope.$broadcast("fb_statusChange", {'status':response.status});
-            }, true);
-        },
         login:function () {
             FB.getLoginStatus(function (response) {
                 switch (response.status) {
@@ -43,7 +38,6 @@ app.factory('Facebook', function ($rootScope) {
                         FB.login(function (response) {
                             if (response.authResponse) {
                                 $rootScope.$broadcast('fb_connected', {facebook_id:response.authResponse.userID});
-                                $rootScope.$broadcast('fb_get_login_status');
                             } else {
                                 $rootScope.$broadcast('fb_login_failed');
                             }
@@ -63,7 +57,7 @@ app.factory('Facebook', function ($rootScope) {
         },
         unsubscribe:function () {
             FB.api("/me/permissions", "DELETE", function (response) {
-                $rootScope.$broadcast('fb_get_login_status');
+                $rootScope.$broadcast('fb_unsubscribed');
             });
         }
     };

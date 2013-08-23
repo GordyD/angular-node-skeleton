@@ -4,15 +4,9 @@
 
 angular.module('myApp.controllers', []).
   controller('AppController', function(Facebook, $scope, $rootScope, $http) {
-    $scope.info = {};
+    $scope.logged_in = false;
+    $scope.login_details = {first_name: "", last_name: "", image_url :""};
 
-    $rootScope.$on("fb_statusChange", function (event, args) {
-        $rootScope.fb_status = args.status;
-        $rootScope.$apply();
-    });
-    $rootScope.$on("fb_get_login_status", function () {
-        Facebook.getLoginStatus();
-    });
     $rootScope.$on("fb_login_failed", function () {
         console.log("fb_login_failed");
     });
@@ -48,105 +42,62 @@ angular.module('myApp.controllers', []).
 
         var params = {};
 
-        console.log('Args');
-        console.log(args)
+        function setLoginDetails(member) {
+          $scope.logged_in = true;
+          $scope.login_details = member;
+        };
 
         function authenticateViaFacebook(parameters) {
-            //posts some user data to a page that will check them against some db
-            //$http.post('php/auth.php', parameters).success(function () {
-                //$scope.updateSession();
-            //});
-            $scope.loginDetails = parameters;
+            $http.get('/api/members?facebook_id='+parameters.facebook_id).
+            success(function(data) {
+              if(data.members.length > 0) {
+                $http.post('/api/login', {facebook_id: parameters.facebook_id}).success(
+                  function (response) {
+                    setLoginDetails(response);
+                  }
+                );
+              } else {
+                $http.post('/api/members', parameters).success(
+                  function (response) {
+                    $http.post('/api/login', {facebook_id: parameters.facebook_id}).success(
+                      function (response2) {
+                        setLoginDetails(response);
+                      }
+                    );
+                  }
+                );
+              }
+            });
         }
 
-        if (args.userNotAuthorized === true) {
-            //if the user has not authorized the app, we must write his credentials in our database
-            console.log("user is connected to facebook but has not authorized our app");
-            FB.api(
-                {
-                    method:'fql.multiquery',
-                    queries:{
-                        'q1':'SELECT uid, first_name, last_name FROM user WHERE uid = ' + args.facebook_id,
-                        'q2':'SELECT url FROM profile_pic WHERE width=800 AND height=800 AND id = ' + args.facebook_id
-                    }
-                },
-                function (data) {
-                    //let's built the data to send to php in order to create our new user
-                    params = {
-                        facebook_id: data[0]['fql_result_set'][0].uid,
-                        first_name: data[0]['fql_result_set'][0].first_name,
-                        last_name: data[0]['fql_result_set'][0].last_name,
-                        picture: data[1]['fql_result_set'][0].url
-                    }
-                    authenticateViaFacebook(params);
-                });
-        }
-        else {
-            console.log("user is connected to facebook and has authorized our app");
-            //the parameter needed in that case is just the users facebook id
-            FB.api(
-                {
-                    method:'fql.multiquery',
-                    queries:{
-                        'q1':'SELECT uid, first_name, last_name FROM user WHERE uid = ' + args.facebook_id,
-                        'q2':'SELECT url FROM profile_pic WHERE width=800 AND height=800 AND id = ' + args.facebook_id
-                    }
-                },
-                function (data) {
-                    //let's built the data to send to php in order to create our new user
-                    params = {
-                        facebook_id:data[0]['fql_result_set'][0].uid,
-                        first_name:data[0]['fql_result_set'][0].first_name,
-                        last_name:data[0]['fql_result_set'][0].last_name,
-                        picture:data[1]['fql_result_set'][0].url
-                    }
-                    authenticateViaFacebook(params);
-                });
-        }
-
+        FB.api(
+          {
+              method:'fql.multiquery',
+              queries:{
+                  'q1':'SELECT uid, first_name, last_name, email FROM user WHERE uid = ' + args.facebook_id,
+                  'q2':'SELECT url FROM profile_pic WHERE width=64 AND height=64 AND id = ' + args.facebook_id
+              }
+          },
+          function (data) {
+              params = {
+                  facebook_id:data[0]['fql_result_set'][0].uid,
+                  first_name:data[0]['fql_result_set'][0].first_name,
+                  email: data[0]['fql_result_set'][0].email,
+                  last_name:data[0]['fql_result_set'][0].last_name,
+                  image_url:data[1]['fql_result_set'][0].url
+              }
+              authenticateViaFacebook(params);
+          }
+        );
     });
-
-
-    $rootScope.updateSession = function () {
-        //reads the session variables if exist from php
-        console.log('*** should update session here!');
-        //$http.post('php/session.php').success(function (data) {
-            //and transfers them to angular
-            //$rootScope.session = data;
-        //});
-    };
-
-    $rootScope.updateSession();
-
-
-    // button functions
-    $scope.getLoginStatus = function () {
-        Facebook.getLoginStatus();
-    };
 
     $scope.login = function () {
         Facebook.login();
     };
 
-    $scope.logout = function () {
-        Facebook.logout();
-        $rootScope.session = {};
-        //make a call to a php page that will erase the session data
-        //$http.post("php/logout.php");
-    };
-
     $scope.unsubscribe = function () {
         Facebook.unsubscribe();
     }
-
-    $scope.getInfo = function () {
-        FB.api('/' + $rootScope.session.facebook_id, function (response) {
-          console.log(response);
-            console.log('Good to see you, ' + response.name + '.');
-        });
-        $rootScope.info = $rootScope.session;
-
-    };
 
   }).
   controller('IndexController', function ($scope, $http) {
@@ -165,7 +116,7 @@ angular.module('myApp.controllers', []).
     $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     $scope.years = ["2013", "2014", "2015"];
     $scope.createTrip = function () {
-      $http.post('api/trips', $scope.form).
+      $http.post('/api/trips', $scope.form).
       success(function (data) {
         $location.path('/');
       })
@@ -190,20 +141,20 @@ angular.module('myApp.controllers', []).
     });
 
     $scope.updateTrip = function () {
-      $http.put('api/trips/'+$routeParams.id, $scope.form).
+      $http.put('/api/trips/'+$routeParams.id, $scope.form).
       success(function (data) {
         $location.url('/trip/view/'+$routeParams.id);
       });
     }
   }).
   controller('DeleteTripController', function ($scope, $http, $location, $routeParams) {
-      $http.get('api/trips/'+$routeParams.id).
+      $http.get('/api/trips/'+$routeParams.id).
       success(function(data) {
         $scope.trip = data.trip;
       });
 
       $scope.deleteTrip = function() {
-        $http.delete('api/trips/'+$routeParams.id).
+        $http.delete('/api/trips/'+$routeParams.id).
         success(function(data) {
           $location.url('/');
         });
