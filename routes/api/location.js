@@ -1,15 +1,26 @@
-var db = require('../db.js');
-
+var location = require('../../lib/api/location.js');
 /*
  * TriJoin /location API
  */
 
 exports.collection = function (req, res) {
 	var offset = req.params.offset | 0;
-	var limit = req.param.id | 10;
-	db.query('SELECT * FROM location').then(
+	var limit = req.params.id | 10;
+	var canonical = req.params.canonical | undefined;
+	location.collection(canonical, offset, limit).then(
 		function woo(result) {
 			res.json({locations: result.rows});
+		},
+		function ahh(err) {
+			res.json(err);
+		}
+	);
+};
+
+exports.get = function (req, res) {
+	location.get(req.params.id).then(
+		function woo(result) {
+			res.json({location: result.rows[0]});
 		},
 		function ahh(err) {
 			console.error(err);
@@ -18,42 +29,23 @@ exports.collection = function (req, res) {
 	);
 };
 
-exports.get = function (req, res) {
-	var id = req.params.id;
-	if(id > 0) {
-		db.query('SELECT * FROM location WHERE id = ' + id).then(
-			function woo(result) {
-				res.json({location: result.rows[0]});
-			},
-			function ahh(err) {
-				console.error(err);
-				res.json(false);
-			}
-		);
-	} else {
-		res.json(false);
-	}
-};
-
 function parseGeoLocation(geolocation) {
 	var location = [];
 	return location;
 }
 
 exports.create = function(req, res) {
-	if(!req.body.geolocation) {
+	if(!req.body.geoinfo) {
 		res.json(false);
 		return;
 	}
-	var insert = 'INSERT INTO location (canonical, city, region, country, coordinates) VALUES($1,$2,$3,$4,$5)',
-	params = [req.body.geolocation.name, req.body.geolocation.city, req.body.year];
-	db.query(insert,params).then(
+	var geoinfo = req.body.geoinfo;
+	location.create(geoinfo.canonical,geoinfo.city,geoinfo.county,geoinfo.country,geoinfo.lat,geoinfo.lng).then(
 		function woo(result) {
-			res.json(req.body);
+			res.json(result);
 		},
 		function ahh(err) {
-			console.error(err);
-			res.json(false);
+			res.json(err);
 		}
 	);
 };

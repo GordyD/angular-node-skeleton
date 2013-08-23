@@ -28,7 +28,12 @@ exports.get = function (req, res) {
 };
 
 exports.create = function(req, res) {
-	trip.create(1,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description).then(
+	var geoinfo = req.body.geoinfo;
+	location.create(geoinfo.canonical,geoinfo.city,geoinfo.county,geoinfo.country,geoinfo.lat,geoinfo.lng).then(
+		function woo(locationId) {
+			trip.create(locationId,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description);
+		}
+	).then(
 		function woo(result) {
 			res.json(result);
 		},
