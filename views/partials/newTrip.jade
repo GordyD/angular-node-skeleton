@@ -13,17 +13,35 @@ form.form-horizontal
 		div.col-4
 			select(name="year", class="form-control", ng-model="form.year")
 				option(value="", disabled) Year
-				option(ng-repeat="year in years", value="{{year}}") {{year}} 
+				option(ng-repeat="year in years", value="{{year}}") {{year}}
+	div.form-group
+		label(class="col-4 control-label", for="month") How long do you want to go for?
+		div(class="col-4")
+			select(class="form-control", name="duration", ng-model="form.duration")
+				option(value="", disabled) I don't mind
+				option(value="1") Less than a week
+				option(value="2") 1 week
+				option(value="3") 2 weeks
+				option(value="4") 3 weeks
+				option(value="5") More than 3 weeks 
 	div.form-group
 		label(class="col-4 control-label", for="month") What is your budget?
-		div.col-4
+		div(class="col-4")
 			select(class="form-control", name="budget", ng-model="form.budget")
-				option(value="", disabled) Not set
+				option(value="", disabled) I don't mind
 				option(value="1000") {{currency}}1,000
 				option(value="1500")  {{currency}}1,500
 				option(value="2000")  {{currency}}2,000
 				option(value="2500")  {{currency}}2,500
 				option(value="3000")  {{currency}}3,000 
+	div.form-group
+		label(class="col-4 control-label", for="month") What activities will your trip involve?
+		div.col-8
+			input(class="form-control", ng-model="form.tags", placeholder="E.g. Sunbathing, Eating, Drinking") 
+	div.form-group
+		label(class="col-4 control-label", for="month") Is there anything you would like to add?
+		div.col-8
+			textarea(class="form-control", ng-model="form.description") 
 	div.form-group
 		div(class="col-4 col-offset-8")
 			button(class="form-control btn btn-primary", ng-click="createTrip()") Create Trip
