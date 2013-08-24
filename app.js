@@ -17,13 +17,18 @@ var app = module.exports = express();
  * Configuration
  */
 
-// all environments
+/** All environments */
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.use(express.cookieParser());
+
+/** Simple session storage */
+app.use(express.session({secret: 'tr1pJ01nBi9S3cr3t'}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
