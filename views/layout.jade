@@ -6,6 +6,7 @@ html(lang='en', ng-app='myApp')
     title TripJoin
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css')
+    link(rel='stylesheet', href='/css/spacing.css')
     link(rel='stylesheet', href='/css/social-buttons.css')
     link(rel='stylesheet', href='/css/app.css')
   body(ng-controller="AppController")
@@ -22,13 +23,13 @@ html(lang='en', ng-app='myApp')
               a(href='/') Home
             li
               a(href='/trip/new') Add a new trip
-        div(id="fb-root", ng-class="{display:!logged_in, hide:logged_in}")
+        div(id="fb-root", ng-class="{display:!logged_in, hide:logged_in}", class="u-mtm pull-right")
           button(class="btn btn-small btn-facebook", ng-click="login()")
             i.icon-facebook
             span  | Connect
-        div(class="tripjoin-login_details pull-right", ng-class="{display:logged_in, hide:!logged_in}")
+        div(class="tripjoin-login_details u-mtm pull-right", ng-class="{display:logged_in, hide:!logged_in}")
           span {{login_details.first_name}} {{login_details.last_name}}
-          img(class="img-rounded", src="{{login_details.image_url}}", width="32", height="32");
+          img(class="u-mls img-rounded", src="{{login_details.image_url}}", width="32", height="32");
     div(id="wrap")
       block body
     footer(class="tripjoin-footer")
