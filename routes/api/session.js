@@ -3,7 +3,7 @@ var db = require('../../lib/db.js'),
 
 // Auth function - not for exposure through API
 exports.authenticate = function(req, res, next) {
-  if (! req.session || req.session.member_id) {
+  if (!req.session.member_id) {
   	res.status(401);
     res.json({status: 'You need to be logged in to view this page.'});
   } else {
@@ -15,7 +15,6 @@ exports.session = function(req, res) {
 	memberApi.get(req.session.member_id).then(
 		function woo(result) {
 			if (result.rows.length === 1) {
-				req.session.member_id = result.rows[0].id;
 				res.json(result.rows[0]);
 			} else {
 				res.status(401);
@@ -30,7 +29,6 @@ exports.session = function(req, res) {
 }
 
 exports.login = function(req, res) {
-	console.log(req.body);
 	var facebook_id = req.body.facebook_id | undefined,
 	username = req.body.username | undefined,
 	password = req.body.password | undefined,
@@ -62,6 +60,7 @@ exports.login = function(req, res) {
 		}
 	).then(
 	 function(result) {
+	 	req.session.member_id = result.id;
 	 	res.json(result);
 	 }, 
 	 function(error) {

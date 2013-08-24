@@ -18,28 +18,14 @@ angular.module('myApp.controllers', []).
         console.log("fb_logout_failed!");
     });
 
+    $http.get('/api/session').success(
+        function(result) {
+          $scope.logged_in = true;
+          $scope.login_details = result;
+        }
+    );
+
     $rootScope.$on("fb_connected", function (event, args) {
-        /*
-         If facebook is connected we can follow two paths:
-         The users has either authorized our app or not.
-
-         ---------------------------------------------------------------------------------
-         http://developers.facebook.com/docs/reference/javascript/FB.getLoginStatus/
-
-         the user is logged into Facebook and has authenticated your application (connected)
-         the user is logged into Facebook but has not authenticated your application (not_authorized)
-         the user is not logged into Facebook at this time and so we don't know if they've authenticated
-         your application or not (unknown)
-         ---------------------------------------------------------------------------------
-
-         If the user is connected to facebook, his facebook_id will be enough to authenticate him in our app,
-         the only thing we will have to do is to post his facebook_id to 'php/auth.php' and get his info
-         from the database.
-
-         If the user has a status of unknown or not_authorized we will have to do a facebook api call to force him to
-         connect and to get some extra data we might need to unthenticated him.
-         */
-
         var params = {};
 
         function setLoginDetails(member) {
