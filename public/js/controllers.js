@@ -46,8 +46,8 @@ angular.module('myApp.controllers', []).
                 $http.post('/api/members', parameters).success(
                   function (response) {
                     $http.post('/api/login', {facebook_id: parameters.facebook_id}).success(
-                      function (response2) {
-                        setLoginDetails(response);
+                      function (loginDetails) {
+                        setLoginDetails(loginDetails);
                       }
                     );
                   }
