@@ -1,7 +1,7 @@
 p There are {{trips.length}} trips
 
 div(ng-repeat='trip in trips')
-	h3 {{trip.destination}}
+	h3 {{trip.canonical}}
 	div {{trip.month}} - {{trip.year}}
 	a(href='trip/view/{{trip.id}}') More 
 	a(href='trip/edit/{{trip.id}}') Edit 
