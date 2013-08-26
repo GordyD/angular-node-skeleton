@@ -39,8 +39,7 @@ exports.create = function(req, res) {
 		res.json(false);
 		return;
 	}
-	var geoinfo = req.body.geoinfo;
-	location.create(geoinfo.canonical,geoinfo.city,geoinfo.county,geoinfo.country,geoinfo.lat,geoinfo.lng).then(
+	location.create(req.body.geoinfo).then(
 		function woo(result) {
 			res.json(result);
 		},
