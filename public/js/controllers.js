@@ -94,6 +94,7 @@ angular.module('myApp.controllers', []).
         arr[index].month = months[value.month];
       });
       $scope.trips = data.trips;
+      console.log($scope.trips);
     });
   }).
   controller('NewTripController', function ($scope, $http, $location) {
@@ -101,6 +102,7 @@ angular.module('myApp.controllers', []).
     $scope.currency = '$';
     $scope.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     $scope.years = ["2013", "2014", "2015"];
+    $scope.form.tags = [];
     $scope.createTrip = function () {
       $http.post('/api/trips', $scope.form).
       success(function (data) {
