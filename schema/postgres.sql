@@ -21,7 +21,10 @@ CREATE TABLE member (
 CREATE TABLE location (
 	id SERIAL PRIMARY KEY,
 	canonical VARCHAR(255),
+	formatted VARCHAR(255),
+	locality VARCHAR(255),
 	city VARCHAR(100),
+	county VARCHAR(100),
 	region VARCHAR(100),
 	country VARCHAR(100),
 	coordinates POINT
