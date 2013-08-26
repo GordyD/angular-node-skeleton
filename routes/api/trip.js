@@ -7,7 +7,6 @@ var location = require('../../lib/api/location.js');
 exports.collection = function (req, res) {
 	trip.collection().then(
 		function woo(result) {
-			console.log('awesome');
 			res.json({trips: result.rows});
 		},
 		function ahh(err) {
@@ -28,13 +27,23 @@ exports.get = function (req, res) {
 };
 
 exports.create = function(req, res) {
-	var geoinfo = req.body.geoinfo;
-	location.create(geoinfo.canonical,geoinfo.city,geoinfo.county,geoinfo.country,geoinfo.lat,geoinfo.lng).then(
-		function woo(locationId) {
-			trip.create(locationId,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description);
+	location.create(req.body.geoinfo).then(
+		function woo(locationResponse) {
+			if (locationResponse.rows[0]) {
+				return trip.create(locationResponse.rows[0].id,req.body.month, req.body.year, req.body.duration, req.body.budget, req.body.image_url, req.body.description);
+			} else {
+				console.log(locationResponse);
+				return false;
+			}
 		}
 	).then(
 		function woo(result) {
+			console.log(result);
+			if(!result) {
+				res.status(500);
+				console.log('hmmmmm');
+				res.json({ error: 'The location could not be saved.'});
+			}
 			res.json(result);
 		},
 		function ahh(err) {
