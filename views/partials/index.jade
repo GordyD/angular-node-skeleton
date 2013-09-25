@@ -1,8 +1,6 @@
-p There are {{trips.length}} trips
+p There are {{messages.length}} messages
 
-div(ng-repeat='trip in trips')
-	h3 {{trip.canonical}}
-	div {{trip.month}} - {{trip.year}}
-	a(href='trip/view/{{trip.id}}') More 
-	a(href='trip/edit/{{trip.id}}') Edit 
-	a(href='trip/delete/{{trip.id}}') Delete
+div(ng-repeat='message in messages')
+	h3 {{message.name}}
+	div {{message.message}}
+	a(href='message/{{message.id}}') More 

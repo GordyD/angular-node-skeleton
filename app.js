@@ -1,13 +1,9 @@
-
 /**
  * Module dependencies
  */
 var express = require('express'),
   routes = require('./routes'),
-  tripApi = require('./routes/api/trip'),
-  memberApi = require('./routes/api/member'),
-  locationApi = require('./routes/api/location'),
-  sessionApi = require('./routes/api/session'),
+  messages = require('./routes/api/messages'),
   http = require('http'),
   path = require('path');
 
@@ -27,7 +23,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser());
 
 /** Simple session storage */
-app.use(express.session({secret: 'tr1pJ01nBi9S3cr3t'}));
+app.use(express.session({secret: 'vkjHei93bjbf48GH84jjeU'}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
@@ -45,31 +41,12 @@ if (app.get('env') === 'production') {
 /**
  * Routes
  */
-
 // serve index and view partials
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
 app.get('/partials/:directory/:name', routes.subpartials);
-
-// JSON API
-app.post('/api/login', sessionApi.login);
-app.get('/api/session', sessionApi.authenticate, sessionApi.session);
-app.get('/api/session', sessionApi.authenticate, sessionApi.logout);
-
-app.get('/api/trips', tripApi.collection);
-app.get('/api/trips/:id', tripApi.get);
-app.post('/api/trips', sessionApi.authenticate, tripApi.create);
-app.put('/api/trips/:id', sessionApi.authenticate, tripApi.edit);
-app.delete('/api/trips/:id', sessionApi.authenticate, tripApi.delete);
-
-app.post('/api/members', memberApi.create);
-app.get('/api/members', memberApi.collection);
-app.get('/api/members/:id', memberApi.get);
-app.get('/api/members/:id', memberApi.edit);
-app.get('/api/members/:id', memberApi.delete);
-
-app.get('/api/members', memberApi.collection);
-app.get('/api/members', memberApi.collection);
+app.get('/api/0/messages', messages.collection);
+app.get('/api/0/messages/:id', messages.get);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
@@ -77,7 +54,6 @@ app.get('*', routes.index);
 /**
  * Start Server
  */
-
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });

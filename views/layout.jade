@@ -1,4 +1,4 @@
-!!!
+doctype 5
 html(lang='en', ng-app='myApp')
   head
     meta(charset='utf8')
@@ -16,26 +16,16 @@ html(lang='en', ng-app='myApp')
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a(class="navbar-brand", href="/") TripJoin
+        a(class="navbar-brand", href="/") Demo App
         div(class="nav-collapse collapse navbar-responsive-collapse")
           ul(class="nav navbar-nav")
             li.active
               a(href='/') Home
-            li
-              a(href='/trip/new') Add a new trip
-        div(id="fb-root", ng-class="{display:!logged_in, hide:logged_in}", class="u-mtm pull-right")
-          button(class="btn btn-small btn-facebook", ng-click="login()")
-            i.icon-facebook
-            span  | Connect
-        div(class="tripjoin-login_details u-mtm pull-right", ng-class="{display:logged_in, hide:!logged_in}")
-          span {{login_details.first_name}} {{login_details.last_name}}
-          img(class="u-mls img-rounded", src="{{login_details.image_url}}", width="32", height="32");
-    div(id="wrap")
-      block body
-    footer(class="tripjoin-footer")
+    block body
+    footer(class="demo-footer")
       div.container
         div.row
-          div(class="col-12") TripJoin was created by Gordon Dent (2013)
+          div(class="col-12") Demo was created by Gordon Dent (2013)
     script(src='js/lib/angular/angular.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.5.0/ui-bootstrap-tpls.min.js')
     script(src='//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places')
