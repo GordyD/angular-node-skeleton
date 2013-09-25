@@ -2,8 +2,8 @@
  * Module dependencies
  */
 var express = require('express'),
-  routes = require('./routes'),
-  messages = require('./routes/api/messages'),
+  routes = require('./controllers/index'),
+  messages = require('./controllers/api/messages'),
   http = require('http'),
   path = require('path');
 
