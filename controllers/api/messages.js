@@ -6,7 +6,7 @@ var data = [
 	},
 	{
 		id: 1,
-		name: 'Jon',
+		name: 'Jonathan',
 		message: 'I think so too, I am going to mash the s**t out of some apis!'
 	},
 	{
@@ -16,7 +16,7 @@ var data = [
 	},
 	{
 		id: 3,
-		name: 'Duylam',
+		name: 'Sara',
 		message: 'And I am going to write some of the most sexy HTML5 you have ever seen, these designs are going to come to life!'
 	}
 ];
